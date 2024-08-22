@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>跟打器</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>跟打器</h1>
+        <div id="stats">
+            <div class="stat-item">
+                <p>时间: <span id="time">0</span> 秒</p>
+            </div>
+            <div class="stat-item">
+                <p>速度: <span id="wpm">0</span>字/每分钟</p>
+            </div>
+            <div class="stat-item">
+                <p>准确率: <span id="accuracy">0</span>%</p>
+            </div>
+            <div class="stat-item">
+                <p>击键数: <span id="keystrokes">0</span></p>
+            </div>
+            <div class="stat-item">
+                <p>码长: <span id="codeLength">0</span></p>
+            </div>
+            <div class="stat-item">
+                <p>回改数: <span id="backspaces">0</span></p>
+            </div>
+            <div class="stat-item">
+                <p>错字数: <span id="errors">0</span></p>
+            </div>
+        </div>
+        <div id="inputContainer" class="resizable">
+            <textarea id="inputText" class="text-area" placeholder="在此粘贴文本..."></textarea>
+            <div class="resize-handle"></div>
+        </div>
+        <button id="startButton" class="flat-button">开始</button>
+        <div id="typingArea" class="resizable" style="display: none;">
+            <div id="displayText" class="text-area"></div>
+            <textarea id="typingInput" class="text-area" placeholder="开始打字..."></textarea>
+            <div class="resize-handle"></div>
+        </div>
+        <div id="controlButtons" style="display: none;">
+            <button id="pauseButton" class="flat-button">暂停</button>
+            <button id="stopButton" class="flat-button">停止</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

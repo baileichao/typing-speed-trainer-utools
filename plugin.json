@@ -1,0 +1,28 @@
+{
+    "pluginName": "跟打器",
+    "description": "一个简单的跟打器，用于提高打字速度和准确率",
+    "author": "Your Name",
+    "homepage": "https://your-homepage.com",
+    "version": "0.1.0",
+    "main": "index.html",
+    "preload": "preload.js",
+    "logo": "logo.png",
+    "features": [
+        {
+            "code": "typing-trainer",
+            "explain": "打开跟打器",
+            "cmds": ["跟打器", "打字练习", "练习"]
+        }
+    ]
+}
+
+
+
+
+
+
+
+
+
+
+
