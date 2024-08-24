@@ -14,8 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const backspacesElement = document.getElementById('backspaces');
     const errorsElement = document.getElementById('errors');
     const controlButtons = document.getElementById('controlButtons');
+    const statsTableBody = document.getElementById('statsTableBody');
+    const fontSelector = document.getElementById('fontSelector');
 
-    const defaultText = `在工作或学习中遇到不开心的时候，不妨静下来好好想想，自己到底是对是错。生活中不是你对别人好，别人就该对你好，你要明白这个道理，每个人都有自己的原则，有人功利，有人善良，你不可能要求别人什么。有时间的话，不妨到处走走，在雄伟的高山之间，放声大喊，一吐心中的阴郁，在浪漫的大海之间，看潮起潮落，感悟人生的起伏跌宕，在落日余晖中感受天地的宁静，洗涤心中的贪念。当你遭遇失恋的时候，不要太悲伤，失去的并非能忘记，拥有的并非不会失去。那些缘来缘去都只是人生的一个瞬间，而人生里那些大段的时间，你会和那个懂你，爱你，珍惜你的人一起度过，好好珍惜在你身边默默陪着你的人。每个人都懂得这个道理，可是还是有人执迷不悟，苦苦执着于那个无缘的人，不肯放手，伤了自己，苦了别人。爱他或她就让那份美好的记忆藏在心底，我们都是在爱的挫折中，逐渐成长起来，才知道什么是爱，又该怎样去爱。希望多年以后再次相遇，还能洒脱的说一句，谢谢你曾经爱过我。当你的婚姻出现问题的时候，多些宽容，多些理解，少些责骂。婚姻本来就是两个人的事，一味的埋怨对方，根本不能解决任何问题。多想想曾经的美好回忆，想想两人同吃一碗面的艰难日子，想想曾经心里的感动。试着做一下换位思考，自己错在哪里，多给自己，也给对方一些机会，人都会有缺点，错误，多些包容，你会活得更轻松。如果真的缘尽了，不妨轻轻的放开手，让彼此都留下美好的回忆，道一声珍重再见，如果不能做朋友，也不可能做敌人，就做那个熟悉的陌生人吧。毕竟生活还是要继续，我们还要继续寻找那个有缘之人。当你和孩子出现问题的时候，不妨想想自己的青春年少，想想那些无知的轻狂岁月，我们都是从年轻走过来的。试着去了解今天的孩子想的什么，喜欢什么，当你以一个朋友的身份去了解他们的时候，你就已经是他们的朋友了，多些沟通，多些理解，多些包容，他们才会向你倾诉他们的烦恼，困惑，迷茫。人生不是十全十美，当你的心觉得累了的时候，不妨为自己的心找一个出口。换一个工作，换一种生活，也换一种对待生活的态度。`;
+    const defaultText = `心的出口`;
 
     // 设置默认文本
     inputText.value = defaultText;
@@ -34,6 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let firstCharTyped = false;
     let lastCharTime = null;
     let totalActiveTypingTime = 0;
+    let typingStartTimeString = '';
+    let isResumed = false;
+
+    // 从本地存储加载打字记录
+    loadStatsFromLocalStorage();
 
     function resetStats() {
         totalCharsTyped = 0;
@@ -50,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     startButton.addEventListener('click', () => {
+        console.log("Start button clicked"); // 调试信息
         const text = inputText.value.trim();
         if (text) {
             displayText.textContent = text;
@@ -60,6 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
             typingInput.focus();
             resetStats();
             isStarted = true;
+            typingStartTimeString = getCurrentDateTimeString(); // 记录开始时间
+        } else {
+            console.error("Input text is empty"); // 调试信息
         }
     });
 
@@ -116,10 +127,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             highlightText(typedText);
 
-            if (typedText === displayText.textContent) {
+            if (typedText === displayText.textContent && !isPaused) {
                 isStarted = false;
                 updateStats();
                 stopTimer();  // Stop the timer when typing is complete
+                addStatsToTable();  // Add stats to table when typing is complete
                 stopTyping();
             }
 
@@ -140,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function resumeTyping() {
         isPaused = false;
+        isResumed = true;
         startTimer();
     }
 
@@ -250,4 +263,110 @@ document.addEventListener('DOMContentLoaded', () => {
         const visibleLines = lines.slice(currentLineIndex, currentLineIndex + 7).join('\n');
         inputText.value = visibleLines;
     }
+
+    function addStatsToTable() {
+        const wpm = calculateWPM(totalCharsTyped, totalActiveTypingTime).toFixed(1);
+        const accuracy = ((correctCharsTyped / totalCharsTyped) * 100).toFixed(1);
+        const keystrokesPerSecond = (totalKeystrokes / elapsedTime).toFixed(1);
+        const codeLength = (totalKeystrokes / totalCharsTyped).toFixed(1);
+        const errors = calculateErrors(typingInput.value, displayText.textContent);
+        const backspaces = backspaceCount;
+        const time = elapsedTime.toFixed(1);
+
+        const newRow = `
+            <tr>
+                <td>${typingStartTimeString}</td>
+                <td>${time}</td>
+                <td>${wpm}</td>
+                <td>${accuracy}</td>
+                <td>${keystrokesPerSecond}</td>
+                <td>${codeLength}</td>
+                <td>${backspaces}</td>
+                <td>${errors}</td>
+            </tr>
+        `;
+
+        statsTableBody.insertAdjacentHTML('afterbegin', newRow);
+
+        // 保持最近5次记录
+        while (statsTableBody.rows.length > 5) {
+            statsTableBody.deleteRow(5);
+        }
+
+        // 保存打字记录到本地存储
+        saveStatsToLocalStorage();
+    }
+
+    function saveStatsToLocalStorage() {
+        const stats = [];
+        for (let i = 0; i < statsTableBody.rows.length; i++) {
+            const row = statsTableBody.rows[i];
+            const record = {
+                startTime: row.cells[0].textContent,
+                time: row.cells[1].textContent,
+                wpm: row.cells[2].textContent,
+                accuracy: row.cells[3].textContent,
+                keystrokesPerSecond: row.cells[4].textContent,
+                codeLength: row.cells[5].textContent,
+                backspaces: row.cells[6].textContent,
+                errors: row.cells[7].textContent
+            };
+            stats.push(record);
+        }
+        localStorage.setItem('typingStats', JSON.stringify(stats));
+    }
+
+    function loadStatsFromLocalStorage() {
+        const stats = JSON.parse(localStorage.getItem('typingStats')) || [];
+        stats.forEach(record => {
+            const newRow = `
+                <tr>
+                    <td>${record.startTime}</td>
+                    <td>${record.time}</td>
+                    <td>${record.wpm}</td>
+                    <td>${record.accuracy}</td>
+                    <td>${record.keystrokesPerSecond}</td>
+                    <td>${record.codeLength}</td>
+                    <td>${record.backspaces}</td>
+                    <td>${record.errors}</td>
+                </tr>
+            `;
+            statsTableBody.insertAdjacentHTML('beforeend', newRow);
+        });
+    }
+
+    function getCurrentDateTimeString() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+
+    // 动态加载系统字体
+    function loadSystemFonts() {
+        const fontList = [
+            "Arial", "Verdana", "Helvetica", "Tahoma", "Trebuchet MS", "Times New Roman",
+            "Georgia", "Garamond", "Courier New", "Brush Script MT"
+        ];
+        fontList.forEach(font => {
+            const option = document.createElement('option');
+            option.value = font;
+            option.textContent = font;
+            fontSelector.appendChild(option);
+        });
+    }
+
+    // 设置字体
+    fontSelector.addEventListener('change', (event) => {
+        const selectedFont = event.target.value;
+        inputText.style.fontFamily = selectedFont;
+        typingInput.style.fontFamily = selectedFont;
+    });
+
+    // 加载系统字体
+    loadSystemFonts();
 });

@@ -1,123 +1,113 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: flex-start; /* 修改为 flex-start 以确保内容从顶部开始排列 */
     height: 100vh;
-    margin: 0;
-    padding: 10px;
-    box-sizing: border-box;
+    background-color: #f0f0f0;
 }
 
 .container {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
+    width: 80%;
+    max-width: 1400px;
+    background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: calc(100% - 20px);
-    height: calc(100% - 20px);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    resize: both;
-    overflow: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+    margin-top: 20px; /* 添加顶部外边距，确保内容不会遮挡标题 */
 }
 
 h1 {
     text-align: center;
-    margin: 0;
-    padding: 10px 0;
-    font-size: 24px;
+    margin: 0; /* 移除默认的外边距 */
+    padding: 20px 0; /* 添加内边距以确保标题有足够的空间 */
 }
 
 #stats {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 10px;
+    justify-content: space-around;
+    flex-wrap: wrap;
 }
 
 .stat-item {
-    text-align: center;
-    flex: 1;
-    margin: 0 5px;
+    margin: 10px;
+}
+
+#inputContainer, #typingArea {
+    margin-top: 20px;
 }
 
 .text-area {
     width: 100%;
-    flex: 1;
-    margin-top: 10px;
+    height: 300px; /* 设置高度以显示完整内容 */
     padding: 10px;
+    box-sizing: border-box;
     font-size: 16px;
-    font-family: Arial, sans-serif;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    resize: none;
-}
-
-#inputContainer {
-    margin: 0 20px; /* 设置左右空白距离 */
 }
 
 #inputText {
-    height: 160px; /* 设置高度为160像素 */
-    overflow-y: hidden; /* 隐藏滚动条 */
+    border: 2px solid #add8e6; /* 浅蓝色框 */
+}
+
+#typingArea {
+    margin-top: 20px; /* 输入框最上方距粘贴框最下方20个像素 */
 }
 
 .flat-button {
-    width: 30%;
+    display: inline-block;
+    width: 100px; /* 按钮宽度设置为100像素 */
     padding: 10px;
-    font-size: 16px;
+    margin-top: 20px;
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
-    margin-bottom: 10px;
-    transition: background-color 0.3s;
-    box-shadow: none;
+    font-size: 16px;
+    text-align: center;
 }
 
 .flat-button:hover {
     background-color: #0056b3;
 }
 
-#displayText {
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #f9f9f9;
-    flex: 1;
-    white-space: pre-wrap;
-    overflow-y: auto;
-}
-
-#controlButtons {
+#buttonContainer, #controlButtons {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 20px; /* 按钮之间的间距 */
+    margin-top: 20px;
 }
 
-.resizable {
+#statsTableContainer {
+    max-height: 150px;
+    overflow-y: auto;
+    margin-top: 20px;
     position: relative;
-    margin-bottom: 10px;
 }
 
-.resize-handle {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    cursor: row-resize;
-    background: transparent;
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+th {
+    background-color: #f2f2f2;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .highlight {
-    background-color: lightblue;
+    background-color: #add8e6; /* 浅蓝色 */
 }
 
 .error {
-    background-color: lightcoral;
+    background-color: #ffcccb; /* 浅红色 */
 }

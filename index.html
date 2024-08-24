@@ -14,7 +14,7 @@
                 <p>时间: <span id="time">0</span> 秒</p>
             </div>
             <div class="stat-item">
-                <p>速度: <span id="wpm">0</span>字/每分钟</p>
+                <p>速度: <span id="wpm">0</span> 字/分钟</p>
             </div>
             <div class="stat-item">
                 <p>准确率: <span id="accuracy">0</span>%</p>
@@ -29,14 +29,16 @@
                 <p>回改数: <span id="backspaces">0</span></p>
             </div>
             <div class="stat-item">
-                <p>错字数: <span id="errors">0</span></p>
+                <p>错字: <span id="errors">0</span></p>
             </div>
         </div>
         <div id="inputContainer" class="resizable">
-            <textarea id="inputText" class="text-area" placeholder="在此粘贴文本..."></textarea>
+            <textarea id="inputText" class="text-area" placeholder="在此粘贴文本...">心的出口</textarea>
             <div class="resize-handle"></div>
         </div>
-        <button id="startButton" class="flat-button">开始</button>
+        <div id="buttonContainer">
+            <button id="startButton" class="flat-button">开始</button>
+        </div>
         <div id="typingArea" class="resizable" style="display: none;">
             <div id="displayText" class="text-area"></div>
             <textarea id="typingInput" class="text-area" placeholder="开始打字..."></textarea>
@@ -45,6 +47,25 @@
         <div id="controlButtons" style="display: none;">
             <button id="pauseButton" class="flat-button">暂停</button>
             <button id="stopButton" class="flat-button">停止</button>
+        </div>
+        <div id="statsTableContainer">
+            <table>
+                <thead>
+                    <tr>
+                        <th>时间</th>
+                        <th>时间(秒)</th>
+                        <th>速度(字/秒)</th>
+                        <th>准确率(%)</th>
+                        <th>击键数 (次/秒)</th>
+                        <th>码长</th>
+                        <th>回改数</th>
+                        <th>错误</th>
+                    </tr>
+                </thead>
+                <tbody id="statsTableBody">
+                    <!-- 动态添加行 -->
+                </tbody>
+            </table>
         </div>
     </div>
     <script src="script.js"></script>
